@@ -144,18 +144,6 @@ public class MissionUnitTest {
         m.setTime(dateTime);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetTimeEmpty() {
-        m = new Mission();
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        Date dateTime = null;
-        try {
-            dateTime = df.parse("");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        m.setTime(dateTime);
-    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSetTimeNull() {
@@ -167,19 +155,6 @@ public class MissionUnitTest {
     public void testMissionHasDefaultNullTime() {
         m = new Mission();
         Assert.assertNull(m.getTime());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetIllegalTime() {
-        m = new Mission();
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        Date dateTime = null;
-        try {
-            dateTime = df.parse("-1");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        m.setTime(dateTime);
     }
 
     //Test captain

@@ -20,6 +20,7 @@ import java.util.*;
 
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.intThat;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -322,8 +323,8 @@ public class PersonMinerTest {
         Mockito.when(p0.getExpertise()).thenReturn(expertiseSet1);
 
         Set<Expertise> expertiseSet2 =new HashSet<>();
-        expertiseSet2.add(ex0);
         expertiseSet2.add(ex1);
+        expertiseSet2.add(ex2);
         p1.setExpertise(expertiseSet2);
         Mockito.when(p1.getExpertise()).thenReturn(expertiseSet2);
 
@@ -335,8 +336,7 @@ public class PersonMinerTest {
         Mockito.when(p2.getExpertise()).thenReturn(expertiseSet3);
 
         Set<Expertise> expertiseSet4 =new HashSet<>();
-        expertiseSet4.add(ex3);
-        expertiseSet4.add(ex4);
+        expertiseSet4.add(ex5);
         p3.setExpertise(expertiseSet4);
         Mockito.when(p3.getExpertise()).thenReturn(expertiseSet4);
 
@@ -348,8 +348,9 @@ public class PersonMinerTest {
         Mockito.when(pDao.getAllPerson()).thenReturn(pSet);
 
         Set<Person> personSet = pMiner.getRostering(expertiseSet0);
+        assertTrue(personSet.contains(p0));
         assertTrue(personSet.contains(p1));
         assertTrue(personSet.contains(p2));
-        assertTrue(personSet.contains(p0));
+        assertFalse(personSet.contains(p3));
     }
 }

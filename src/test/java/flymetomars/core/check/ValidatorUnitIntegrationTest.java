@@ -34,9 +34,10 @@ public class ValidatorUnitIntegrationTest {
 
     @Test
     public void testFinalisedMissionWithEmptyVariable() throws ValidationException {
-        expectedEx.expect(ValidationException.class);
-        expectedEx.expectMessage("variable can not be empty or null");
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("variables cannot be null");
         Mission mission = new Mission();
+
         mission.setTime(null);
         mission.setName("");
         mission.setDuration(0);
