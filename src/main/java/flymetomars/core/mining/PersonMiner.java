@@ -9,6 +9,7 @@ import flymetomars.model.Equipment;
 import flymetomars.model.Expertise;
 import flymetomars.model.Mission;
 import flymetomars.model.Person;
+import jdk.nashorn.internal.ir.WhileNode;
 
 import java.util.*;
 
@@ -56,7 +57,7 @@ public class PersonMiner {
                 }
             }
         }
-        System.out.print(personWithExpertiseList.get(0).getEmail());
+        //System.out.print(personWithExpertiseList.get(0).getEmail());
         return personWithExpertiseList;
     }
 
@@ -79,12 +80,188 @@ public class PersonMiner {
         //for (String key : demandedExpertise.keySet()) {
           //  demandedExpertise.merge(key, 0,Integer::sum);
         //}
-        int max = Collections.max(demandedExpertise.values());
+        //int max = Collections.max(demandedExpertise.values());
 
         Map.Entry<String, Integer> maxMap = demandedExpertise.entrySet().stream()
                 .max(Map.Entry.comparingByValue(Integer::compareTo)).get();
         return maxMap.getKey();
         ///Comparator.comparing(Map.Entry::getValue)
         //System.out.print(maxMap);
+    }
+
+    public List<Mission> getTwoMostNonInteractionMissions () {
+        int size1 = 0;
+        int size2 = 0;
+        Set<Mission> missionSet = missionDAO.getAllMissions();
+        List<Mission> missionList = new ArrayList<>(missionSet);
+        List<Mission> emptyMissionList = new ArrayList<>();
+        if(missionList.size()<2) {
+            return Collections.emptyList();
+        }
+        Set<Person> participantIntersection = new HashSet<Person>();
+        Iterator<Mission> iterator =  missionList.iterator();
+        while (iterator.hasNext()) {
+            Mission m1 = iterator.next();
+            Iterator<Mission> iterator1 = missionList.iterator();
+            while (iterator1.hasNext()) {
+                Mission m2 = iterator1.next();
+                if (!m1.equals(m2)) {
+                    participantIntersection.addAll(m1.getParticipantSet());
+                    participantIntersection.retainAll(m2.getParticipantSet());
+                    if (participantIntersection.isEmpty()) {
+                        if (m1.getParticipantSet().size() + m2.getParticipantSet().size() > size1 + size2) {
+                            emptyMissionList.clear();
+                            emptyMissionList.add(m1);
+                            emptyMissionList.add(m2);
+                            size1 = m1.getParticipantSet().size();
+                            size2 = m2.getParticipantSet().size();
+                        }
+                    }
+                }
+            }
+        }
+        return emptyMissionList;
+    }
+
+    public List<Person> getPowerBrokers() {
+        int size1 = 0;
+        List<Mission> missionList = getTwoMostNonInteractionMissions();
+        if(missionList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Mission m1 = missionList.get(0);
+        Mission m2 = missionList.get(1);
+        Set<Person> participant1 = m1.getParticipantSet();
+        Set<Person> participant2 = m2.getParticipantSet();
+        Set<Mission> missionsIntersection = new HashSet<>();
+        List<Person> powerBrokers = new ArrayList<>();
+        Iterator<Person> iterator = participant1.iterator();
+        while (iterator.hasNext()) {
+            Person person1 = iterator.next();
+            Set<Mission> missions1 = person1.getMissionRegistered();
+            Iterator<Person> iterator1 = participant2.iterator();
+            while (iterator1.hasNext()) {
+                Person person2 = iterator1.next();
+                Set<Mission> missions2 = person2.getMissionRegistered();
+                missionsIntersection.addAll(missions1);
+                missionsIntersection.retainAll(missions2);
+                if (!missionsIntersection.isEmpty()) {
+                    if (missionsIntersection.size() > size1) {
+                        size1 = missionsIntersection.size();
+                        powerBrokers.add(person1);
+                        powerBrokers.add(person2);
+                    }
+                }
+            }
+        }
+        return powerBrokers;
+    }
+
+    public Set<Person> getConnectionPerson(Person person) {
+        if(person == null)
+            throw new IllegalArgumentException("Person cannot be null");
+        Set<Person> connectionPerson = new HashSet<>();
+        Iterator<Mission> iterator = person.getMissionRegistered().iterator();
+        while (iterator.hasNext()) {
+            Mission mission = iterator.next();
+            connectionPerson.addAll(mission.getParticipantSet());
+        }
+        connectionPerson.remove(person);
+        return connectionPerson;
+    }
+
+    public Set<Person> getNerFronties(Person person, int k, int m) {
+        if(person == null)
+            throw new IllegalArgumentException("Person cannot be null");
+        if(k <= 0)
+            throw new IllegalArgumentException("k cannot less or equal than zero");
+        if(m <= 0)
+            throw new IllegalArgumentException("m cannot less or equal than zero");
+        Set<Person> personSet = personDAO.getAllPerson();
+        List<Person> personList = new ArrayList<>(personSet);
+        Set<Person> newFrontiersSet = new HashSet<>();
+        if(personList.size()<2) {
+            return Collections.emptySet();
+        }
+
+        Set<Person> connectedPerson = new HashSet<>();
+        Set<Person> emptyPerson = new HashSet<>();
+        connectedPerson.addAll(getConnectionPerson(person));
+
+        for(int i = 1; i < k; i++) {
+            Set<Person> connectedKPerson = new HashSet<>();
+            Iterator<Person> iterator = connectedPerson.iterator();
+            while (iterator.hasNext()) {
+                Person person1 = iterator.next();
+                connectedKPerson = getConnectionPerson(person1);
+                emptyPerson.addAll(connectedKPerson);
+            }
+            connectedPerson.addAll(emptyPerson);
+        }
+
+        personList.remove(person);
+        personList.removeAll(connectedPerson);
+
+        if (m <= personList.size()) {
+            m = m;
+        } else {
+            m = personList.size();
+        }
+        for (int i = 0; i < m; i++) {
+            newFrontiersSet.add(personList.get(i));
+        }
+        return newFrontiersSet;
+    }
+
+    public Set<Person> getRostering(Set<Expertise> expertiseSet) {
+        if(expertiseSet == null)
+            throw new IllegalArgumentException("expertise role cannot be null");
+        int size0 = expertiseSet.size();
+        Set<Person> personSet = personDAO.getAllPerson();
+        Set<Person> rosteringSet = new HashSet<>();
+        List<Expertise> expertiseTemp = new ArrayList<>(expertiseSet);
+        List<Expertise> expertiseTemp1 = new ArrayList<>(expertiseSet);
+        //Iterator<Expertise> iterator = expertiseTemp.iterator();
+        //while (iterator.hasNext()) {
+        for (Person p :personSet) {
+            expertiseTemp.retainAll(p.getExpertise());
+
+
+            if (!expertiseTemp.isEmpty()) {
+                if (expertiseTemp.size() == size0) {
+                    rosteringSet.add(p);
+                    Iterator<Person> iterator1 = rosteringSet.iterator();
+                    while (iterator1.hasNext()) {
+                        Person person = iterator1.next();
+                        System.out.print(person.getEmail());
+                    }
+                    return rosteringSet;
+                }
+                expertiseTemp1.removeAll(expertiseTemp);
+                expertiseTemp.clear();
+                expertiseTemp.addAll(expertiseTemp1);
+                //expertiseTemp1.clear();
+                //expertiseTemp1.addAll(expertiseTemp);
+                rosteringSet.add(p);
+                size0 = expertiseTemp.size();
+            } else {
+                expertiseTemp.addAll(expertiseTemp1);
+            }
+            Iterator<Expertise> iterator1 = expertiseTemp.iterator();
+            while (iterator1.hasNext()) {
+                Expertise expertise = iterator1.next();
+                System.out.print(expertise.getDescription());
+            }
+        }
+        if (expertiseTemp.size() != size0) {
+            System.out.print("can not fulfill all expertise");
+        }
+        Iterator<Person> iterator = rosteringSet.iterator();
+        while (iterator.hasNext()) {
+            Person person = iterator.next();
+            System.out.print(person.getEmail());
+        }
+
+        return  rosteringSet;
     }
 }

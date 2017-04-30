@@ -85,14 +85,17 @@ public class MissionMinerTest {
     public void setKLessEqualThanZero() {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("The number of K must at least 1");
-        mMiner.getExorbitance(intThat(lessThanOrEqualTo(0)));
+        mMiner.getExorbitance(0);
+        //doThrow(new IllegalArgumentException()).when(mMiner).getExorbitance(intThat(lessThanOrEqualTo(0)));
+        //when(mMiner.getExorbitance(intThat(lessThanOrEqualTo(0)))).thenThrow(new IllegalArgumentException());
     }
 
     @Test
     public void noMissionInDataBase() {
-        Set<Mission> mSet = new HashSet<>();
-        Mockito.when(mDao.getAllMissions()).thenReturn(mSet);
-        assertEquals(mSet,mMiner.getExorbitance(1));
+        Set<Mission> emptySet = Collections.emptySet();
+        List<Mission> emptyList = Collections.emptyList();
+        Mockito.when(mDao.getAllMissions()).thenReturn(emptySet);
+        assertEquals(emptyList,mMiner.getExorbitance(1));
     }
 
     @Test
@@ -165,4 +168,5 @@ public class MissionMinerTest {
         assertEquals("mission1",result.get(0).getName());
         assertEquals("mission2",result.get(1).getName());
     }
+
 }

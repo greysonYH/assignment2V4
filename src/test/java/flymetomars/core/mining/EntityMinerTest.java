@@ -52,17 +52,4 @@ public class EntityMinerTest {
 
         miner = new EntityMiner(pDao, mDao, eDao, iDao);
     }
-
-    @Test
-    public void oneSinglePersonIsAHotshot() {
-        p1.addExpertise(e1);
-        m1.getParticipantSet().add(p1);
-        m1.getExpertiseRequired().add(e1);
-
-        when(mDao.getAll()).thenReturn(Lists.newArrayList(m1));
-
-        List<Person> hotshots = miner.getHotshots(2);
-        assertEquals(1, hotshots.size());
-        assertEquals(p1, hotshots.get(0));
-    }
 }
