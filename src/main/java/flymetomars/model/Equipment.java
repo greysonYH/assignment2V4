@@ -1,6 +1,7 @@
 package flymetomars.model;
 
 import com.google.common.base.Objects;
+import flymetomars.core.check.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ public class Equipment {
 
     private String name;
     private Map<Attribute, Integer> attributes;
+    private Validator validator;
 
     public enum Attribute {
         weight, volume, cost
@@ -31,6 +33,7 @@ public class Equipment {
         attributes.put(Attribute.weight, 0);
         attributes.put(Attribute.volume, 0);
         attributes.put(Attribute.cost, 0);
+        validator = new Validator();
     }
 
     public Equipment(String name, int weight, int volume, int cost) {
@@ -39,6 +42,11 @@ public class Equipment {
         attributes.put(Attribute.weight, weight);
         attributes.put(Attribute.volume, volume);
         attributes.put(Attribute.cost, cost);
+        validator = new Validator();
+        validator.checkNumber(weight);
+        validator.checkNumber(volume);
+        validator.checkNumber(cost);
+        validator.checkForNullEmpty(name);
     }
 
     public String getName() {

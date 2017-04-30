@@ -1,13 +1,14 @@
 package flymetomars.model;
 
 import com.google.common.base.Objects;
+import flymetomars.core.check.Validator;
 
 /**
  * Created by yli on 16/03/15.
  */
 public class Expertise extends SeriablizableEntity {
     private String description;
-
+    private Validator validator;
 
     @Override
     public boolean equals(Object o) {
@@ -24,10 +25,12 @@ public class Expertise extends SeriablizableEntity {
 
     public Expertise() {
         description = new String();
+        validator = new Validator();
     }
 
     public Expertise(String description) {
         this.description = description;
+        validator = new Validator();
     }
 
     public String getDescription() {
@@ -35,6 +38,7 @@ public class Expertise extends SeriablizableEntity {
     }
 
     public void setDescription(String description) {
+        validator.checkForNullEmpty(description);
         this.description = description;
     }
 }

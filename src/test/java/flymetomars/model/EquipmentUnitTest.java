@@ -1,5 +1,6 @@
 package flymetomars.model;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,7 +25,6 @@ public class EquipmentUnitTest {
     public void sameEquipmentNeedsToHaveSameAttributesAndName() {
         e1 = new Equipment("Laser", 10, 2, 20);
         e2 = new Equipment("Laser", 10, 2, 20);
-
         assertEquals(e1, e2);
     }
 
@@ -32,7 +32,6 @@ public class EquipmentUnitTest {
     public void differentEquipmentCanHaveDifferentAttributes() {
         e1 = new Equipment("Laser", 10, 1, 20);
         e2 = new Equipment("Laser", 10, 2, 20);
-
         assertNotEquals(e1, e2);
     }
 
@@ -40,36 +39,16 @@ public class EquipmentUnitTest {
     public void differentEquipmentCanHaveDifferentNames() {
         e1 = new Equipment("Laser", 10, 2, 20);
         e2 = new Equipment("laser", 10, 2, 20);
-
         assertNotEquals(e1, e2);
     }
 
-    ////
-    @Test
-    public void setNameNull() {
-
-    }
-
-    @Test
-    public void setWeightNull() {
-
-    }
-
-    @Test
-    public void setVolumnNull() {
-
-    }
-
-    @Test
-    public void setCostNull() {
-
-    }
-
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public ExpectedException expected = ExpectedException.none();
 
     @Test
     public void testEqualMethodWithNullVariables() {
+        expected.expect(IllegalArgumentException.class);
+        expected.expectMessage("variables cannot be null");
         e1 = new Equipment("Laser", 10, 1, 20);
         e2 = new Equipment(null,0,0,0);
         e1.equals(e2);
@@ -77,8 +56,31 @@ public class EquipmentUnitTest {
 
     @Test
     public void testHashCodeMethodWithNullVariables() {
-        //e1 = new Equipment("Laser", 10, 1, 20);
+        expected.expect(IllegalArgumentException.class);
+        expected.expectMessage("variables cannot be null");
+        e1 = new Equipment("Laser", 10, 1, 20);
         e2 = new Equipment(null,0,0,0);
         e2.hashCode();
+    }
+
+    @Test
+    public void testSetWeightNegative() {
+        expected.expect(IllegalArgumentException.class);
+        expected.expectMessage("this number can not be negative");
+        e1 = new Equipment("Laser", -10, 1, 1);
+    }
+
+    @Test
+    public void testSetVolumeNegative() {
+        expected.expect(IllegalArgumentException.class);
+        expected.expectMessage("this number can not be negative");
+        e1 = new Equipment("Laser", 1, -1, 1);
+    }
+
+    @Test
+    public void testSetCostNegative() {
+        expected.expect(IllegalArgumentException.class);
+        expected.expectMessage("this number can not be negative");
+        e1 = new Equipment("Laser", 1, 1, -1);
     }
 }

@@ -3,7 +3,11 @@ package flymetomars.model;
 import com.google.common.base.Objects;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import flymetomars.core.check.Validator;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +45,7 @@ public class Mission extends SeriablizableEntity {
     private Multiset<Equipment> equipmentsRequired;
 
     private Map<Equipment.Attribute, Integer> maxAttributes;
+    private Validator validator;
 
 
     public Mission(Date time, int budget, String name, int duration, Status status, Person captain, String location, String description, Set<Person> participantSet, Set<Invitation> invitationSet, Set<Expertise> expertiseRequired, Multiset<Equipment> equipmentsRequired, Map<Equipment.Attribute, Integer> maxAttributes) {
@@ -57,6 +62,7 @@ public class Mission extends SeriablizableEntity {
         this.expertiseRequired = expertiseRequired;
         this.equipmentsRequired = equipmentsRequired;
         this.maxAttributes = maxAttributes;
+        validator = new Validator();
     }
 
     public Mission() {
@@ -74,6 +80,7 @@ public class Mission extends SeriablizableEntity {
         expertiseRequired = new HashSet<>();
         maxAttributes = new HashMap<>();
         equipmentsRequired = HashMultiset.create();
+        validator = new Validator();
     }
 
     public String getName() {
@@ -81,6 +88,7 @@ public class Mission extends SeriablizableEntity {
     }
 
     public void setName(String name) {
+        validator.checkForNullEmpty(name);
         this.name = name;
     }
 
@@ -89,6 +97,7 @@ public class Mission extends SeriablizableEntity {
     }
 
     public void setTime(Date time) {
+        validator.checkForNullEmpty(time);
         this.time = time;
     }
 
@@ -97,6 +106,7 @@ public class Mission extends SeriablizableEntity {
     }
 
     public void setLocation(String location) {
+        validator.checkForNullEmpty(location);
         this.location = location;
     }
 
@@ -105,6 +115,7 @@ public class Mission extends SeriablizableEntity {
     }
 
     public void setDescription(String description) {
+        validator.checkForNullEmpty(description);
         this.description = description;
     }
 
@@ -129,6 +140,7 @@ public class Mission extends SeriablizableEntity {
     }
 
     public void setCaptain(Person captain) {
+        validator.checkForNullEmpty(captain);
         this.captain = captain;
     }
 
