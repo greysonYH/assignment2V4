@@ -16,8 +16,17 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by greyson on 18/4/17.
  */
-public class MissionUnitTest {
+public class MissionIntegrationTest {
     private Mission m;
+
+    private Person createCaptain() {
+        Person p = new Person();
+        p.setFirstName("greyson");
+        p.setLastName("yang");
+        p.setEmail("gy@gmail.com");
+        p.setPassword("qwe123456789");
+        return p;
+    }
 
     @Before
     public void setUp() {
@@ -161,7 +170,8 @@ public class MissionUnitTest {
     @Test
     public void testSetCaptain() {
         m = new Mission();
-        m.setCaptain(new Person());
+        Person captain = createCaptain();
+        m.setCaptain(captain);
     }
 
     @Test(expected = IllegalArgumentException.class)

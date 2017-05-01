@@ -14,8 +14,17 @@ import static org.hamcrest.core.Is.is;
 /**
  * Created by greyson on 30/4/17.
  */
-public class InvitationUnitTest {
+public class InvitationIntegrationTest {
     private Invitation inv;
+
+    private Person createPerson() {
+        Person p = new Person();
+        p.setFirstName("greyson");
+        p.setLastName("yang");
+        p.setEmail("gy@gmail.com");
+        p.setPassword("qwe123456789");
+        return p;
+    }
 
     @Before
     public void setUp() {
@@ -62,7 +71,8 @@ public class InvitationUnitTest {
     @Test
     public void testSetCreator() {
         inv = new Invitation();
-        inv.setCreator(new Person());
+        Person p = createPerson();
+        inv.setCreator(p);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -82,7 +92,8 @@ public class InvitationUnitTest {
     @Test
     public void testSetRecipient() {
         inv = new Invitation();
-        inv.setRecipient(new Person());
+        Person p = createPerson();
+        inv.setRecipient(p);
     }
 
     @Test(expected = IllegalArgumentException.class)

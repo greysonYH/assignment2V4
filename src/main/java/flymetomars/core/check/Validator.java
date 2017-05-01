@@ -196,7 +196,7 @@ public class Validator {
         Matcher matcher = pattern.matcher(email);
         boolean matches = matcher.matches();
         if (matches == false) {
-            throw new IllegalArgumentException(" illegal email format.");
+            throw new IllegalArgumentException("illegal email format.");
         }
     }
 

@@ -20,7 +20,7 @@ import java.util.*;
  * @version $Id: $
  */
 @Category(IntegrationTest.class)
-public class ValidatorUnitIntegrationTest {
+public class ValidatorIntegrationTest {
 
     private Validator validator;
 

@@ -23,7 +23,7 @@ public class Person extends SeriablizableEntity {
     private Validator validator;
 
     public Person() {
-        this.firstName = "";////
+        this.firstName = "";
         this.lastName = "";
         this.email = "";
         this.password = "";

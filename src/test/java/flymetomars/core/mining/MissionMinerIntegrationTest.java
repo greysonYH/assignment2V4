@@ -41,7 +41,7 @@ import static org.hamcrest.core.Every.everyItem;
 /**
  * Created by greyson on 22/4/17.
  */
-public class MissionMinerTest {
+public class MissionMinerIntegrationTest {
     private Mission m0,m1,m2,m3;
     private Equipment eq0,eq1,eq2,eq3,eq4;
 

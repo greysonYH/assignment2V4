@@ -116,8 +116,6 @@ public class PersonUnitTest {
     }
 
 
-    /////////
-
     @Test
     public void MissionRegisteredNotNull() {
         assertNotNull("expertise not null", p.getMissionRegistered());
@@ -163,8 +161,10 @@ public class PersonUnitTest {
         p.setLastName("greyson");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetLastNameEmpty() {
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("variables cannot be empty.");
         p.setLastName("");
     }
 
@@ -200,8 +200,10 @@ public class PersonUnitTest {
         Assert.assertTrue(p.getEmail().isEmpty());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetInvalidEmail() {
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("illegal email format.");
         p.setEmail("asdfasdf");  //no "@" and "."
     }
 
@@ -218,8 +220,10 @@ public class PersonUnitTest {
         p.setPassword("as12345678"); //12 characters
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetBlankPassword() {
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("variables cannot be empty.");
         p.setPassword("");
     }
 

@@ -29,7 +29,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Created by greyson on 29/4/17.
  */
-public class PersonMinerTest {
+public class PersonMinerIntegrationTest {
     private Mission m0,m1,m2,m3;
     private Equipment eq0,eq1,eq2,eq3,eq4;
     private Expertise ex0,ex1,ex2,ex3,ex4,ex5;

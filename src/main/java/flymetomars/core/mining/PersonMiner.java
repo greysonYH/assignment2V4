@@ -226,21 +226,10 @@ public class PersonMiner {
             } else {
                 expertiseTemp.addAll(expertiseTemp1);
             }
-            Iterator<Expertise> iterator1 = expertiseTemp.iterator();
-            while (iterator1.hasNext()) {
-                Expertise expertise = iterator1.next();
-                System.out.print(expertise.getDescription());
-            }
         }
         if (expertiseTemp.size() != size0) {
             System.out.print("can not fulfill all expertise");
         }
-        Iterator<Person> iterator = rosteringSet.iterator();
-        while (iterator.hasNext()) {
-            Person person = iterator.next();
-            System.out.print(person.getEmail());
-        }
-
         return  rosteringSet;
     }
 }
