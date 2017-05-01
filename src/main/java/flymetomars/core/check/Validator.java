@@ -190,7 +190,6 @@ public class Validator {
             throw new IllegalArgumentException("variables cannot be empty.");
         }
     }
-
     public void checkEmailFormat(String email) {
         String patternString = ".+@.+\\..+";
         Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
