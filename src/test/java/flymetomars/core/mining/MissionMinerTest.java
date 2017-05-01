@@ -86,8 +86,6 @@ public class MissionMinerTest {
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("The number of K must at least 1");
         mMiner.getExorbitance(0);
-        //doThrow(new IllegalArgumentException()).when(mMiner).getExorbitance(intThat(lessThanOrEqualTo(0)));
-        //when(mMiner.getExorbitance(intThat(lessThanOrEqualTo(0)))).thenThrow(new IllegalArgumentException());
     }
 
     @Test
@@ -98,6 +96,16 @@ public class MissionMinerTest {
         assertEquals(emptyList,mMiner.getExorbitance(1));
     }
 
+    /**
+     * The top-k most expensive missions. The cost of a mission is the sum of the costs of its required equipments.
+     * Mission0 required Eq0 Eq1 , total cost is 3
+     * Mission1 required Eq0 Eq1 Eq2 Eq3, total cost is 10
+     * Mission2 required Eq0 Eq1 Eq2, total cost is 6
+     *
+     * Mission1 is the most expensive Mission
+     * Mission2 place second place
+     * Mission0 place third place
+     */
     @Test
     public void missionExorbitanceTest() {
         Multiset<Equipment> multisetEq1 = HashMultiset.create();
@@ -134,6 +142,19 @@ public class MissionMinerTest {
         assertEquals("mission0",result.get(2).getName());
     }
 
+    /**
+     * The top-k most expensive missions. The cost of a mission is the sum of the costs of its required equipments.
+     * Mission0 required Eq0 Eq1 , total cost is 3
+     * Mission1 required Eq0 Eq1 Eq2 Eq3, total cost is 10
+     * Mission2 required Eq0 Eq1 Eq2, total cost is 6
+     *
+     * Mission1 is the most expensive Mission
+     * Mission2 place second place
+     * Mission0 place third place
+     *
+     * If k = 2
+     * Will Return Mission1 and Mission2
+     */
     @Test
     public void numOfMissionRecordsLessThanK() {
         Multiset<Equipment> multisetEq1 = HashMultiset.create();

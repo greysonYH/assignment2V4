@@ -43,7 +43,6 @@ public class PersonMiner {
         List<Person> personList = new ArrayList<>(personSet);
         List<Mission> missionList = new ArrayList<>(missionSet);
         List<Person> personWithExpertiseList = new ArrayList<>();
-        //most expertise
         String mostDemandedExpertise = getMostDemandedExpertise(missionList);
         Iterator<Person> iterator = personList.iterator();
         while (iterator.hasNext()) {
@@ -57,14 +56,12 @@ public class PersonMiner {
                 }
             }
         }
-        //System.out.print(personWithExpertiseList.get(0).getEmail());
         return personWithExpertiseList;
     }
 
     public String getMostDemandedExpertise(List<Mission> missionList) {
         Iterator<Mission> iterator = missionList.iterator();
         Map<String, Integer> demandedExpertise = new HashMap<>();
-        //int sum = 0;
         while(iterator.hasNext()){
             Mission m = iterator.next();
             Iterator<Expertise> iterator1 = m.getExpertiseRequired().iterator();
@@ -77,16 +74,9 @@ public class PersonMiner {
                 else demandedExpertise.put(expertise.getDescription(), 1);
             }
         }
-        //for (String key : demandedExpertise.keySet()) {
-          //  demandedExpertise.merge(key, 0,Integer::sum);
-        //}
-        //int max = Collections.max(demandedExpertise.values());
-
         Map.Entry<String, Integer> maxMap = demandedExpertise.entrySet().stream()
                 .max(Map.Entry.comparingByValue(Integer::compareTo)).get();
         return maxMap.getKey();
-        ///Comparator.comparing(Map.Entry::getValue)
-        //System.out.print(maxMap);
     }
 
     public List<Mission> getTwoMostNonInteractionMissions () {
@@ -221,27 +211,16 @@ public class PersonMiner {
         Set<Person> rosteringSet = new HashSet<>();
         List<Expertise> expertiseTemp = new ArrayList<>(expertiseSet);
         List<Expertise> expertiseTemp1 = new ArrayList<>(expertiseSet);
-        //Iterator<Expertise> iterator = expertiseTemp.iterator();
-        //while (iterator.hasNext()) {
         for (Person p :personSet) {
             expertiseTemp.retainAll(p.getExpertise());
-
-
             if (!expertiseTemp.isEmpty()) {
                 if (expertiseTemp.size() == size0) {
                     rosteringSet.add(p);
-                    Iterator<Person> iterator1 = rosteringSet.iterator();
-                    while (iterator1.hasNext()) {
-                        Person person = iterator1.next();
-                        System.out.print(person.getEmail());
-                    }
                     return rosteringSet;
                 }
                 expertiseTemp1.removeAll(expertiseTemp);
                 expertiseTemp.clear();
                 expertiseTemp.addAll(expertiseTemp1);
-                //expertiseTemp1.clear();
-                //expertiseTemp1.addAll(expertiseTemp);
                 rosteringSet.add(p);
                 size0 = expertiseTemp.size();
             } else {

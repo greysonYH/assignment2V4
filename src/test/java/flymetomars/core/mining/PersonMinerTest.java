@@ -92,6 +92,7 @@ public class PersonMinerTest {
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
+
     @Test
     public void setKLessEqualThanZero() {
         expectedEx.expect(IllegalArgumentException.class);
@@ -112,6 +113,20 @@ public class PersonMinerTest {
         assertEquals(emptyList1,pMiner.getHotshots(1));
     }
 
+    /**
+     * The top-k persons with the most demanded expertises (required by missions).
+     * Mission0 required expertise Ex0 Ex1 Ex2
+     * Mission1 required expertise Ex1 Ex2
+     * Mission2 required Eq0 Ex1
+     * The most required expertise is Ex1
+     *
+     * Person0 have expertise Ex0 Ex1 Ex2
+     * Person1 have expertise Ex0 Ex2
+     * Person2 have expertise Ex0 Ex2
+     * Person3 have expertise Ex0 Ex2
+     *
+     * Person0 will be Return
+     */
     @Test
     public void personHotShotTest() {
         Set<Expertise> expertiseSet1 =new HashSet<>();
@@ -167,6 +182,18 @@ public class PersonMinerTest {
         assertEquals(p0, pMiner.getHotshots(3).get(0));
     }
 
+    /**
+     * Return a set of persons who connect mostly-non-interacting social circles.
+     *
+     * Mission0 participants are Person0 Person1
+     * Mission1 participants are Person2 Person3
+     * Mission2 participants are Person0 Person1 Person2
+     * Mission3 participants are Person3 Person4 Person5
+     *
+     * Mission2 and Mission3 are two most non interacting mission because they have no same participant
+     * Person 2 and Person 3 have participant Mission1
+     * Person2 and Person3 will be return as PowerBroker
+     * */
     @Test
     public void personPowerBrokerTest() {
         Set<Person> pSet1 = new HashSet<>();
@@ -231,6 +258,32 @@ public class PersonMinerTest {
         assertTrue(pMiner.getPowerBrokers().contains(p3));
     }
 
+
+    /**
+     * Given a person, natural numbers k and m,
+     * return m other persons that this person is not a friend with up to (and including) k connections.
+     *
+     * Expertise Role List Ex0 Ex1 Ex2 Ex3 Ex4
+     *
+     * Mission0 participants are Person0 Person1
+     * Mission1 participants are Person2 Person3
+     * Mission2 participants are Person0 Person1 Person2
+     * Mission3 participants are Person3 Person4 Person5
+     *
+     * If want to find New Frontier for Person0
+     * K = 1 M = 3
+     * Person1 and Person 2 have particpant Mission with Person0
+     * Person3 Person4 Person5 will be return
+     *
+     * K = 2 M = 2
+     * Person3 have participant Mission with Person2
+     * Person4 Person5 will be return
+     *
+     * K = 3 M = 3
+     * Person4 Person5 have participant Mission with Person3
+     * No one will be return
+     *
+     */
     @Test
     public void personNewFrontiersTest() {
         Set<Person> pSet1 = new HashSet<>();
@@ -299,15 +352,35 @@ public class PersonMinerTest {
         assertTrue(pMiner.getNerFronties(p0,1,3).contains(p3));
 
         assertEquals(2, pMiner.getNerFronties(p0,2,2).size());
-        assertTrue(pMiner.getNerFronties(p0,1,3).contains(p5));
-        assertTrue(pMiner.getNerFronties(p0,1,3).contains(p4));
+        assertTrue(pMiner.getNerFronties(p0,2,2).contains(p5));
+        assertTrue(pMiner.getNerFronties(p0,2,2).contains(p4));
 
         assertEquals(0, pMiner.getNerFronties(p0,3,3).size());
-        assertTrue(pMiner.getNerFronties(p0,1,3).contains(p5));
-        assertTrue(pMiner.getNerFronties(p0,1,3).contains(p4));
+        assertFalse(pMiner.getNerFronties(p0,3,3).contains(p5));
+        assertFalse(pMiner.getNerFronties(p0,3,3).contains(p4));
+        assertFalse(pMiner.getNerFronties(p0,3,3).contains(p3));
+        assertFalse(pMiner.getNerFronties(p0,3,3).contains(p2));
+        assertFalse(pMiner.getNerFronties(p0,3,3).contains(p1));
 
     }
 
+    /**
+     * Given the required roles of a mission, find a list of persons with expertise that satisfy the roles.
+     * Expertise Role List Ex0 Ex1 Ex2 Ex3 Ex4
+     *
+     * Mission1 required expertise Ex1 Ex2
+     * Mission2 required Eq0 Ex1
+     * The most required expertise is Ex1
+     *
+     * Person0 have expertise Ex0
+     * Person1 have expertise Ex1 Ex2
+     * Person2 have expertise Ex2 Ex3 Ex4
+     * Person3 have expertise Ex5
+     *
+     * Person0 Person1 Person2 will meet Role required
+     * Person4 can not meet Role required
+     *
+     */
     @Test
     public void personRosteringTest() {
         Set<Expertise> expertiseSet0 =new HashSet<>();

@@ -64,7 +64,6 @@ public class ValidatorUnitIntegrationTest {
         validator.finalise(mission);
     }
 
-
     @Test
     public void testFinalisedMissionWithTwoSameNameEquipment() throws ValidationException{
         expectedEx.expect(ValidationException.class);
@@ -116,7 +115,10 @@ public class ValidatorUnitIntegrationTest {
         mission.getEquipmentsRequired().add(e2);
         validator.finalise(mission);
     }
-
+    /**
+        Mission need Eq1,Eq2,Eq3
+        Participant Person only have Eq1,Eq2
+     */
     @Test
     public void testFinalisedMissionCanNotSatisfyEquipmentRequirement() throws ValidationException{
         expectedEx.expect(ValidationException.class);
@@ -155,6 +157,10 @@ public class ValidatorUnitIntegrationTest {
         validator.finalise(mission);
     }
 
+    /**
+     * Mission need Eq1,Eq2,Eq3
+     *Participant Person only have Eq1,Eq2,Eq3
+     */
     @Test
     public void testFinalisedMissionSatisfyEquipmentRequirement() throws ValidationException{
         Equipment eq1 = new Equipment("hammer1", 2, 2, 2);
@@ -190,6 +196,10 @@ public class ValidatorUnitIntegrationTest {
         validator.finalise(mission);
     }
 
+    /**
+     * Mission Maxiumm Weight,Volume,Cost is 18
+     * Sum of Participant Person's is 2+3+4 = 9
+     */
     @Test
     public void missionEquipmentNotExceedMaximumValue() throws ValidationException{
 
@@ -229,6 +239,10 @@ public class ValidatorUnitIntegrationTest {
         validator.finalise(mission);
     }
 
+    /**
+     * Mission Maxiumm Weight,Volume,Cost is 3
+     * Sum of Participant Person's is 2+3+4 = 9
+     */
     @Test
     public void missionEquipmentExceedMaximumValue() throws ValidationException{
         expectedEx.expect(ValidationException.class);
@@ -268,6 +282,10 @@ public class ValidatorUnitIntegrationTest {
     }
 
 
+    /**
+     * Mission required Expertise are E1, E2,E3,E4
+     * Participant Person's Expertise are E1, E2, E3
+     */
     @Test
     public void missionNeedsToSatisfyRequiredExpertiseFail() throws ValidationException{
         expectedEx.expect(ValidationException.class);
@@ -297,6 +315,10 @@ public class ValidatorUnitIntegrationTest {
         validator.finalise(mission);
     }
 
+    /**
+     * Mission required Expertise are E1, E2,E3,E4
+     * Participant Person's Expertise are E1, E2, E3,E4
+     */
     @Test
     public void missionSatisfyRequiredExpertise() throws ValidationException{
         Expertise e1 = new Expertise("navigation");
